@@ -115,7 +115,7 @@ int main() {
     
             // Close the WRITE end of the pipe.
             close(fd[i][WRITE_END]);
-            sleep(3);
+            sleep(30);
             exit(status);
             
         }
