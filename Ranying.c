@@ -24,11 +24,7 @@ int main() {
     
     // get the time
     struct timeval tv;
-    gettimeofday(&tv, NULL);
-    startTime = (int)tv.tv_sec;
-    startTimeMsec = (int)((tv.tv_usec) / 1000);
-    finishTime = (int)tv.tv_sec;
-    startTimeMsec = (int)((tv.tv_usec) / 1000);
+
     
     // Fork five children processes.
     for (i = 0; i < 5; i++) {
@@ -61,61 +57,78 @@ int main() {
         else if (pid == 0) {
             // CHILD PROCESS.
             
+            gettimeofday(&tv, NULL);
+            startTime = (int)tv.tv_sec;
+            startTimeMsec = (int)((tv.tv_usec) / 1000);
+            finishTime = (int)tv.tv_sec;
+            startTimeMsec = (int)((tv.tv_usec) / 1000);
+            
             if ( i < 4 ){
-                // random 0 1 2s
-                srand(time(NULL));
-                int randomNum = rand() % 3;
-                
-                // TODO: for test, need to remove
-                printf("ramdom = %d\n", randomNum);
 
-                // Close the unused READ end of the pipe.
-                close(fd[i][READ_END]);
-                
-                // Write from the WRITE end of the pipe.
-                write(fd[i][WRITE_END], write_msg, BUFFER_SIZE);
-                
-                // sleep 0, 1, 2s
-                sleep(randomNum);
-                
-                gettimeofday(&tv, NULL);
-                finishTime = (int)tv.tv_sec;
-                finishTimeMsec = (int)((tv.tv_usec) / 1000);
-                
-                // TODO: need to remove this output
-                printf("Time: %ld - Child %d: Wrote '%s' to the pipe. PID: %d\n", tv.tv_sec, i + 1, write_msg, getpid());
-                printf("0:%2d.%d: Child %d: message 1\n", finishTime - startTime - randomNum, startTimeMsec, i + 1);
+                for (;;) {
+                    // random 0 1 2s
+                    srand(time(NULL));
+                    int randomNum = rand() % 3;
+                    
+                    
+                    // Close the unused READ end of the pipe.
+                    close(fd[i][READ_END]);
+                    
+                    // Write from the WRITE end of the pipe.
+                    write(fd[i][WRITE_END], write_msg, BUFFER_SIZE);
+                    
+                    // sleep 0, 1, 2s
+                    sleep(randomNum);
+                    
+                    gettimeofday(&tv, NULL);
+                    finishTime = (int)tv.tv_sec;
+                    finishTimeMsec = (int)((tv.tv_usec) / 1000);
+                    
+                    // TODO: need to remove this output
+                    printf("Time: %ld - Child %d: Wrote '%s' to the pipe. PID: %d\n", tv.tv_sec, i + 1, write_msg, getpid());
+                    printf("0:%2d.%d: Child %d: message 1\n", finishTime - startTime - randomNum, startTimeMsec, i + 1);
+                    
+                    // TODO: for test, need to remove
+                    printf("ramdom = %d\n", randomNum);
+                    
+                    if (finishTime - startTime > 30) break;
+                    
+                    //printf("0:%2d.%d: Child %d: message 2\n", finishTime - startTime, finishTimeMsec, i + 1);
+                    
 
+                }
                 
-                printf("0:%2d.%d: Child %d: message 2\n", finishTime - startTime, finishTimeMsec, i + 1);
-
             }
             else {
-                // Close the unused READ end of the pipe.
-                close(fd[i][READ_END]);
-                
-                gettimeofday(&tv, NULL);
-                int startMessageTime = (int)tv.tv_sec;
-                int startMessageTimeMsec = (int)((tv.tv_usec) / 1000);
-                
-                printf("For the 5th Child, Please input Message 1: \n");
-                scanf("%s", Message);
-                
-                gettimeofday(&tv, NULL);
-                int MessageTime = (int)tv.tv_sec;
-                int MessageTimeMsec = (int)((tv.tv_usec) / 1000);
-                
-                printf("0:%2d.%d: Child %d: %s\n", startMessageTime - startTime, startMessageTimeMsec, i + 1, Message);
-                
-                printf("0:%2d.%d: Child %d: %s\n", MessageTime - startTime, MessageTimeMsec, i + 1, Message);
-                
-                // Write from the WRITE end of the pipe.
-                write(fd[i][WRITE_END], Message, BUFFER_SIZE);
+
+                for (;;) {
+                    // Close the unused READ end of the pipe.
+                    close(fd[i][READ_END]);
+                    
+                    gettimeofday(&tv, NULL);
+                    int startMessageTime = (int)tv.tv_sec;
+                    int startMessageTimeMsec = (int)((tv.tv_usec) / 1000);
+                    
+                    printf("For the 5th Child, Please input Message 1: \n");
+                    scanf("%s", Message);
+                    
+                    gettimeofday(&tv, NULL);
+                    int MessageTime = (int)tv.tv_sec;
+                    int MessageTimeMsec = (int)((tv.tv_usec) / 1000);
+                    
+                    printf("0:%2d.%d: Child %d: %s\n", startMessageTime - startTime, startMessageTimeMsec, i + 1, Message);
+                    
+                    printf("0:%2d.%d: Child %d: %s\n", MessageTime - startTime, MessageTimeMsec, i + 1, Message);
+                    
+                    // Write from the WRITE end of the pipe.
+                    write(fd[i][WRITE_END], Message, BUFFER_SIZE);
+                    
+                    if (MessageTime - startTime > 30) break;
+                }
             }
-    
+            
             // Close the WRITE end of the pipe.
             close(fd[i][WRITE_END]);
-            sleep(30);
             exit(status);
             
         }
