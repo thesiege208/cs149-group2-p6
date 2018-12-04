@@ -51,7 +51,7 @@ int main() {
 
             gettimeofday(&tv, NULL);
             int timeSec = (int) tv.tv_sec;
-            
+
             // Close the unused WRITE end of the pipe.
             close(fd[i][WRITE_END]);
             
