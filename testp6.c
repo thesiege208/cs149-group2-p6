@@ -25,7 +25,9 @@ void childProc (void){
 void parentProc (void){
 	// Close the unused WRITE end of the pipe.
             close(fd[i][WRITE_END]);
-
+	
+	// Does SELECT go here?
+	
             // Read to the READ end of the pipe.
             read(fd[i][READ_END], read_msg, strlen(read_msg)+1);
             printf("Parent: Read '%s' from the pipe. PID: %d\n", read_msg, getppid());
@@ -39,7 +41,7 @@ int main() {char write_msg[BUFFER_SIZE];
     char Message[BUFFER_SIZE]; // used for fifth child process
     
     pid_t pid, waitPid;  // child process id
-    int fd[6];  // file descriptors for the pipe; 0 1 2 3 4 5
+    int fd[6];  // NOT SURE HOW FILE DESCRIPTORS WORK
     int i;
     
     	// Create the pipe.
