@@ -1,0 +1,5 @@
+715 Parent: Read 'Hello c' from the pipe. PID: 1926
+716 Parent: Read 'Hello chÿ²ð' from the pipe. PID: 1926
+716 Parent: Read 'Hello child.' from the pipe. PID: 1926
+716 Parent: Read 'Hello child.' from the pipe. PID: 1926
+521 Parent: Read 'hi' from the pipe. PID: 1926
