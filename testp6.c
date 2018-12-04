@@ -13,27 +13,27 @@
 
 void childProc (void){
 	// Close the unused READ end of the pipe.
-            close(fd[i][READ_END]);
+            close(fd[READ_END]);
                 
             // Write from the WRITE end of the pipe.
-            write(fd[i][WRITE_END], write_msg, BUFFER_SIZE);
+            write(fd[WRITE_END], write_msg, BUFFER_SIZE);
 
             // Close the WRITE end of the pipe.
-            close(fd[i][WRITE_END]);
+            close(fd[WRITE_END]);
 }
 
 void parentProc (void){
 	// Close the unused WRITE end of the pipe.
-            close(fd[i][WRITE_END]);
+            close(fd[WRITE_END]);
 	
 	// Does SELECT go here?
 	
             // Read to the READ end of the pipe.
-            read(fd[i][READ_END], read_msg, strlen(read_msg)+1);
+            read(fd[READ_END], read_msg, strlen(read_msg)+1);
             printf("Parent: Read '%s' from the pipe. PID: %d\n", read_msg, getppid());
             
             // Close the READ end of the pipe.
-            close(fd[i][READ_END]);
+            close(fd[READ_END]);
 }
 
 int main() {char write_msg[BUFFER_SIZE];
