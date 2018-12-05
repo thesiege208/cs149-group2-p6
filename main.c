@@ -88,19 +88,11 @@ int main() {
             startTime = (int) tv.tv_sec;
             
             if (i < 4) {
-                for (;;) {
-                    // random 0 1 2s
-                    srand(time(NULL));
-                    int randomNum = rand() % 3;
+                // Close the unused READ end of the pipe.
+                close(fd[i][READ_END]);
 
-                    // Close the unused READ end of the pipe.
-                    close(fd[i][READ_END]);
-
-                    // sleep 0, 1, 2s
-                    sleep(randomNum+1);
-                    
-                    // TODO
-                    // write_msg = "0:" + (finishTime - startTime) + "." + "finishTimeMsec" + ": Child " + (i + 1) + " (PID=" + getpid() + "): I'm a child.";
+                    for (;;) {                    
+                    sprintf(write_msg, "0:%2d.%d: Child %d (PID=%d): I'm a child.\n", finishTime - startTime, finishTimeMsec, i + 1, getpid());
                     
                     // Write from the WRITE end of the pipe.
                     write(fd[i][WRITE_END], write_msg, strlen(write_msg)+1);
@@ -110,8 +102,15 @@ int main() {
                     finishTimeMsec = (int) ((tv.tv_usec) / 1000);
 
                     printf("0:%2d.%d: Child %d: I'm a child.\n", finishTime - startTime, finishTimeMsec, i + 1);
+                    
+                    // random 0 1 2s
+                    srand(time(NULL));
+                    int randomNum = rand() % 3;
 
-                    if (finishTime - startTime > 30) break;
+                    // sleep 0, 1, 2s
+                    sleep(randomNum+1);
+
+                    if (finishTime - startTime + randomNum + 1 > 30) break;
                 }
                 // Close the WRITE end of the pipe.
                 close(fd[i][WRITE_END]);
@@ -132,8 +131,7 @@ int main() {
                     int MessageTime = (int) tv.tv_sec;
                     int MessageTimeMsec = (int) ((tv.tv_usec) / 1000);
 
-                    // TODO
-                    // write_msg = "0:" + (MessageTime - startMessageTime) + "." + MessageTimeMsec + ": Child " + 5 + " (PID=" + getpid() + "): " + buffer;
+                    sprintf(write_msg, "0:%2d.%d: Child %d (PID=%d): %s\n", MessageTime - startMessageTime, MessageTimeMsec, 5, getpid(), buffer);
 
                     printf("0:%2d.%d: Child %d: %s\n", MessageTime - startMessageTime, MessageTimeMsec, 5, write_msg);
                     // Write from the WRITE end of the pipe.
