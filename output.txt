@@ -1,0 +1,15 @@
+0:916.239: Parent: Read '0: 0.387: Child 4 (PID=2117): I'm a child.
+' from the pipe. PID: 2115
+0:916.239: Parent: Read '0: 1.387: Child 4 (PID=2117): I'm a child.
+' from the pipe. PID: 2115
+0:916.239: Parent: Read '0: 2.388: Child 4 (PID=2117): I'm a child.
+' from the pipe. PID: 2115
+0:916.239: Parent: Read '0: 5.388: Child 4 (PID=2117): I'm a child.
+' from the pipe. PID: 2115
+0:1082.273: Parent: Read 'g' from the pipe. PID: 1013
+0:885.239: Parent: Read '0: 0.397: Child 5 (PID=2119): dsfaf
+' from the pipe. PID: 2116
+0:1051.414: Parent: Read '' from the pipe. PID: 1013
+0:1051.414: Parent: Read '' from the pipe. PID: 1013
+0:1051.414: Parent: Read '' from the pipe. PID: 1013
+0:1051.414: Parent: Read '' from the pipe. PID: 1013

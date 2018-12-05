@@ -28,7 +28,7 @@ int main() {
     int startTime, finishTime, finishTimeMsec;
     int result, nread; // used for 5th child
     
-    fd_set inputs, inputfds; // sets of fildes??
+    fd_set inputs, inputfds; // sets of fildes
     
     FD_ZERO(&inputs); // init inputs to empty set
     FD_SET(0, &inputs); // sets fildes 0 (stdin)
@@ -53,7 +53,7 @@ int main() {
             int timeSec = (int) tv.tv_sec;
             
             // the parent need to wait for each child process to finish
-            while ((waitPid = wait(&status)) > 0);
+            // while ((waitPid = wait(&status)) > 0);
             
             // Close the unused WRITE end of the pipe.
             close(fd[i][WRITE_END]);
@@ -73,12 +73,9 @@ int main() {
                 gettimeofday(&tv, NULL);
                 int currTimeSec = (int) tv.tv_sec;
                 int currTimeMsec = (int) ((tv.tv_usec) / 1000);
-                
-                //printf("0:%2d.%d: Parent: Read '%s' from the pipe. PID: %d\n", currTimeSec - timeSec, currTimeMsec, read_msg, getppid());
+
                 // write directly to OUTPUT file
                 fprintf(fp, "0:%2d.%d: Parent: Read '%s' from the pipe. PID: %d\n", currTimeSec - timeSec, currTimeMsec, read_msg, getppid());
-                
-                // if (currTimeSec - timeSec > 30) break;
             }
             // Close the READ end of the pipe.
             close(fd[i][READ_END]);
@@ -95,7 +92,6 @@ int main() {
                 close(fd[i][READ_END]);
                 
                 for (;;) {
-                
                     gettimeofday(&tv, NULL);
                     finishTime = (int) tv.tv_sec;
                     finishTimeMsec = (int) ((tv.tv_usec) / 1000);
@@ -112,7 +108,7 @@ int main() {
                     write(fd[i][WRITE_END], write_msg, strlen(write_msg)+1);
                     
                     // sleep 0, 1, 2
-                    sleep(randomNum);
+                    sleep(randomNum+1);
 
                     if (finishTime - startTime + randomNum + 1 > 30) break;
                 }
@@ -144,14 +140,13 @@ int main() {
                 }
                 // Close the WRITE end of the pipe.
                 close(fd[i][WRITE_END]);
-                exit(status);
             }
+            status++;
         } else {
             fprintf(stderr, "fork() failed");
             return 1;
         }
     }
-    
     fclose(fp);
     return 0;
 }
