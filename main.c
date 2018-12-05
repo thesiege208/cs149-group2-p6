@@ -9,7 +9,7 @@
 #include <fcntl.h>
 #include <sys/ioctl.h>
 
-#define BUFFER_SIZE 32
+#define BUFFER_SIZE 128
 #define READ_END     0
 #define WRITE_END    1
 
@@ -18,7 +18,8 @@ int main() {
     FILE* fp;
     fp = fopen("output.txt", "w");
     
-    char write_msg[BUFFER_SIZE] = "I'm a child.";
+    char write_msg[BUFFER_SIZE] = "I'm a chlid.";
+    //char write_msg[BUFFER_SIZE];
     char read_msg[BUFFER_SIZE];
     
     pid_t pid;  // child process id
@@ -98,6 +99,9 @@ int main() {
                     // sleep 0, 1, 2s
                     sleep(randomNum+1);
                     
+                    // TODO
+                    // write_msg = "0:" + (finishTime - startTime) + "." + "finishTimeMsec" + ": Child " + (i + 1) + " (PID=" + getpid() + "): I'm a child.";
+                    
                     // Write from the WRITE end of the pipe.
                     write(fd[i][WRITE_END], write_msg, strlen(write_msg)+1);
                     
@@ -116,17 +120,22 @@ int main() {
                     // Close the unused READ end of the pipe.
                     close(fd[i][READ_END]);
 
+                    char buffer[BUFFER_SIZE];
                     gettimeofday(&tv, NULL);
                     int startMessageTime = (int) tv.tv_sec;
 
                     // prompt INPUT for the 5th child
                     printf("Input Message: ");
-                    scanf("%s", write_msg);
+                    scanf("%s", buffer);
                     
                     gettimeofday(&tv, NULL);
                     int MessageTime = (int) tv.tv_sec;
                     int MessageTimeMsec = (int) ((tv.tv_usec) / 1000);
-                    printf("0:%2d.%d: Child %d: %s\n", MessageTime - startMessageTime, MessageTimeMsec, i + 1, write_msg);
+
+                    // TODO
+                    // write_msg = "0:" + (MessageTime - startMessageTime) + "." + MessageTimeMsec + ": Child " + 5 + " (PID=" + getpid() + "): " + buffer;
+
+                    printf("0:%2d.%d: Child %d: %s\n", MessageTime - startMessageTime, MessageTimeMsec, 5, write_msg);
                     // Write from the WRITE end of the pipe.
                     write(fd[i][WRITE_END], write_msg, strlen(write_msg)+1);
                     
