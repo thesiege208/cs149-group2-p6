@@ -1,3 +1,5 @@
-0: 3.560: Parent: Read 'Hello c' from the pipe. PID: 1539
-0:227.472: Parent: Read 'dsf
-' from the pipe. PID: 1539
+0:191.717: Parent: Read 'I'm a child.' from the pipe. PID: 2488
+0:223.719: Parent: Read 'I'm a child.' from the pipe. PID: 2487
+0:254.721: Parent: Read 'I'm a child.' from the pipe. PID: 2486
+0:286.721: Parent: Read 'I'm a child.' from the pipe. PID: 1605
+0:158.728: Parent: Read 'kehrkew' from the pipe. PID: 1024

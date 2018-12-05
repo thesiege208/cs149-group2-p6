@@ -18,7 +18,7 @@ int main() {
     FILE* fp;
     fp = fopen("output.txt", "w");
     
-    char write_msg[BUFFER_SIZE] = "Hello child.";
+    char write_msg[BUFFER_SIZE] = "I'm a child.";
     char read_msg[BUFFER_SIZE];
     
     pid_t pid;  // child process id
@@ -28,7 +28,6 @@ int main() {
     int result, nread; // used for 5th child
     
     fd_set inputs, inputfds; // sets of fildes??
-    struct timeval timeout;
     
     FD_ZERO(&inputs); // init inputs to empty set
     FD_SET(0, &inputs); // sets fildes 0 (stdin)
@@ -51,22 +50,20 @@ int main() {
 
             gettimeofday(&tv, NULL);
             int timeSec = (int) tv.tv_sec;
-            
+
             // Close the unused WRITE end of the pipe.
             close(fd[i][WRITE_END]);
             
             for (int j = 0; j < 5; j++) {
                 inputfds = inputs;
-                timeout.tv_sec = 2;
-                timeout.tv_usec = 500000;
 
-                // get select() results
-                result = select(FD_SETSIZE, &inputfds, (fd_set*) 0, (fd_set*) 0, &timeout);
+                // using SELECT
+                result = select(5, &inputfds, (fd_set*) 0, NULL, NULL);
 
-                if (FD_ISSET(0, &inputfds)) {
-                    ioctl(0, FIONREAD, &nread); //????
+                if (FD_ISSET(fd[j][READ_END], &inputfds)) {
+                    ioctl(fd[j][READ_END], FIONREAD, &nread);
                 }
-                nread = read(fd[j][READ_END], read_msg, strlen(read_msg)+1);
+                nread = read(fd[j][READ_END], read_msg, strlen(write_msg)+1);
                 read_msg[nread] = 0;
                 
                 gettimeofday(&tv, NULL);
@@ -81,15 +78,13 @@ int main() {
             }
             // Close the READ end of the pipe.
             close(fd[i][READ_END]);
-            exit(0);
+            break;
         }
         else if (pid == 0) {
             // CHILD PROCESS.
             
             gettimeofday(&tv, NULL);
             startTime = (int) tv.tv_sec;
-            
-            int count = 1;
             
             if (i < 4) {
                 for (;;) {
@@ -110,8 +105,7 @@ int main() {
                     finishTime = (int) tv.tv_sec;
                     finishTimeMsec = (int) ((tv.tv_usec) / 1000);
 
-                    printf("0:%2d.%d: Child %d: message %d\n", finishTime - startTime, finishTimeMsec, i + 1, count);
-                    count++;
+                    printf("0:%2d.%d: Child %d: I'm a child.\n", finishTime - startTime, finishTimeMsec, i + 1);
 
                     if (finishTime - startTime > 30) break;
                 }
