@@ -92,7 +92,7 @@ int main() {
                 close(fd[i][READ_END]);
 
                     for (;;) {                    
-                    sprintf(write_msg, "0:%2d.%d: Child %d (PID=%d): I'm a child.\n", finishTime - startTime, finishTimeMsec, i + 1, getpid());
+                    sprintf(write_msg, "0:%2d.%d: Child %d (PID=%d): I'm a child.", finishTime - startTime, finishTimeMsec, i + 1, getpid());
                     
                     // Write from the WRITE end of the pipe.
                     write(fd[i][WRITE_END], write_msg, strlen(write_msg)+1);
@@ -131,7 +131,7 @@ int main() {
                     int MessageTime = (int) tv.tv_sec;
                     int MessageTimeMsec = (int) ((tv.tv_usec) / 1000);
 
-                    sprintf(write_msg, "0:%2d.%d: Child %d (PID=%d): %s\n", MessageTime - startMessageTime, MessageTimeMsec, 5, getpid(), buffer);
+                    sprintf(write_msg, "0:%2d.%d: Child %d (PID=%d): %s", MessageTime - startMessageTime, MessageTimeMsec, 5, getpid(), buffer);
 
                     printf("0:%2d.%d: Child %d: %s\n", MessageTime - startMessageTime, MessageTimeMsec, 5, write_msg);
                     // Write from the WRITE end of the pipe.
